@@ -53,7 +53,6 @@
  */
 import { computed } from 'vue'
 import { useGeneratorStore } from '../stores/generator'
-import { open } from '@tauri-apps/plugin-shell'
 
 const store = useGeneratorStore()
 
@@ -61,12 +60,8 @@ const store = useGeneratorStore()
 const stats = computed(() => store.usageStats)
 
 // 打开阿里云百炼控制台
-const openQuotaPage = async () => {
-  try {
-    await open('https://bailian.console.aliyun.com/?tab=model#/model-usage/free-quota')
-  } catch (error) {
-    console.error('打开链接失败:', error)
-  }
+const openQuotaPage = () => {
+  window.open('https://bailian.console.aliyun.com/?tab=model#/model-usage/free-quota', '_blank')
 }
 </script>
 

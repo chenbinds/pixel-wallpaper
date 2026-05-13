@@ -1,17 +1,15 @@
 /**
- * tauri-service.ts - Tauri 服务桥接层
+ * tauri-service.ts - Electron 服务桥接层
  *
- * 封装所有 Tauri invoke 调用，提供类型安全的前端 API。
- * 在浏览器开发模式下（非 Tauri 环境），自动返回模拟数据。
+ * 封装所有 Electron IPC 调用，提供类型安全的前端 API。
+ * 在浏览器开发模式下（非 Electron 环境），自动返回模拟数据。
  */
-
-import { invoke } from '@tauri-apps/api/core'
 
 // ============================================
 // 类型定义
 // ============================================
 
-/** 壁纸文件信息（与 Rust 端 WallpaperFile 对应） */
+/** 壁纸文件信息（与 Electron 端 WallpaperFile 对应） */
 export interface WallpaperFile {
   /** 文件名 */
   filename: string
@@ -23,16 +21,29 @@ export interface WallpaperFile {
   modified_time: string
 }
 
+/** Electron API 类型声明 */
+interface ElectronAPI {
+  invoke: (channel: string, args?: any) => Promise<any>
+  onWallpaperChanged: (callback: (wallpaperPath: string) => void) => () => void
+}
+
+// 扩展 Window 类型以包含 electronAPI
+declare global {
+  interface Window {
+    electronAPI?: ElectronAPI
+  }
+}
+
 // ============================================
 // 环境检测
 // ============================================
 
 /**
- * 检测当前是否运行在 Tauri 环境中
+ * 检测当前是否运行在 Electron 环境中
  * 如果在浏览器中直接打开（开发模式），则返回 false
  */
-function isTauriEnvironment(): boolean {
-  return !!(window as any).__TAURI_INTERNALS__
+function isElectronEnvironment(): boolean {
+  return !!(window.electronAPI)
 }
 
 // ============================================
@@ -82,14 +93,14 @@ export async function downloadAndSave(
   imageUrl: string,
   filename: string
 ): Promise<string> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] downloadAndSave:', imageUrl, '->', filename)
     await simulateDelay()
     return `${MOCK_WALLPAPER_DIR}/${filename}`
   }
 
   try {
-    const result = await invoke<string>('download_and_save_wallpaper', {
+    const result = await window.electronAPI!.invoke('download-and-save-wallpaper', {
       imageUrl,
       filename,
     })
@@ -115,14 +126,14 @@ export async function saveUploaded(
   description: string,
   author: string
 ): Promise<string> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] saveUploaded:', filename, '描述:', description, '作者:', author)
     await simulateDelay()
     return `${MOCK_WALLPAPER_DIR}/${filename}`
   }
 
   try {
-    const result = await invoke<string>('save_uploaded_wallpaper', {
+    const result = await window.electronAPI!.invoke('save-uploaded-wallpaper', {
       fileData,
       filename,
       description,
@@ -141,14 +152,14 @@ export async function saveUploaded(
  * @param imagePath - 本地图片文件的完整路径
  */
 export async function setDesktopWallpaper(imagePath: string): Promise<void> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] setDesktopWallpaper:', imagePath)
     await simulateDelay()
     return
   }
 
   try {
-    await invoke<void>('set_desktop_wallpaper', { imagePath })
+    await window.electronAPI!.invoke('set-desktop-wallpaper', { imagePath })
   } catch (error) {
     console.error('设置桌面壁纸失败:', error)
     throw new Error(`设置桌面壁纸失败: ${error}`)
@@ -161,14 +172,14 @@ export async function setDesktopWallpaper(imagePath: string): Promise<void> {
  * @returns 壁纸目录的完整路径
  */
 export async function getWallpaperDirectory(): Promise<string> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] getWallpaperDirectory')
     await simulateDelay(100)
     return MOCK_WALLPAPER_DIR
   }
 
   try {
-    const result = await invoke<string>('get_wallpaper_directory')
+    const result = await window.electronAPI!.invoke('get-wallpaper-directory')
     return result
   } catch (error) {
     console.error('获取壁纸目录失败:', error)
@@ -182,14 +193,14 @@ export async function getWallpaperDirectory(): Promise<string> {
  * @returns 壁纸文件信息列表
  */
 export async function listWallpapers(): Promise<WallpaperFile[]> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] listWallpapers')
     await simulateDelay(200)
     return [...MOCK_WALLPAPERS]
   }
 
   try {
-    const result = await invoke<WallpaperFile[]>('list_wallpapers')
+    const result = await window.electronAPI!.invoke('list-wallpapers')
     return result
   } catch (error) {
     console.error('列出壁纸失败:', error)
@@ -203,14 +214,14 @@ export async function listWallpapers(): Promise<WallpaperFile[]> {
  * @param filePath - 要删除的壁纸文件完整路径
  */
 export async function deleteWallpaper(filePath: string): Promise<void> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] deleteWallpaper:', filePath)
     await simulateDelay()
     return
   }
 
   try {
-    await invoke<void>('delete_wallpaper', { filePath })
+    await window.electronAPI!.invoke('delete-wallpaper', { filePath })
   } catch (error) {
     console.error('删除壁纸失败:', error)
     throw new Error(`删除壁纸失败: ${error}`)
@@ -223,14 +234,14 @@ export async function deleteWallpaper(filePath: string): Promise<void> {
  * @returns 应用数据目录的完整路径
  */
 export async function getAppDataDir(): Promise<string> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] getAppDataDir')
     await simulateDelay(100)
     return MOCK_APP_DATA_DIR
   }
 
   try {
-    const result = await invoke<string>('get_app_data_dir')
+    const result = await window.electronAPI!.invoke('get-app-data-dir')
     return result
   } catch (error) {
     console.error('获取应用数据目录失败:', error)
@@ -277,19 +288,18 @@ export function formatFileSize(bytes: number): string {
  * @param callback - 壁纸路径回调函数
  */
 export function onWallpaperChanged(callback: (wallpaperPath: string) => void): void {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] onWallpaperChanged listener registered')
     return
   }
 
-  // 动态导入避免在非 Tauri 环境报错
-  import('@tauri-apps/api/event').then(({ listen }) => {
-    listen<string>('wallpaper-changed', (event) => {
-      callback(event.payload)
+  try {
+    window.electronAPI!.onWallpaperChanged((wallpaperPath) => {
+      callback(wallpaperPath)
     })
-  }).catch((error) => {
+  } catch (error) {
     console.error('Failed to setup wallpaper-changed listener:', error)
-  })
+  }
 }
 
 /**
@@ -300,7 +310,7 @@ export function onWallpaperChanged(callback: (wallpaperPath: string) => void): v
  * @throws 如果没有可用壁纸则抛出错误
  */
 export async function randomWallpaper(): Promise<string> {
-  if (!isTauriEnvironment()) {
+  if (!isElectronEnvironment()) {
     console.log('[Mock] randomWallpaper')
     await simulateDelay(500)
     // 随机返回一个模拟壁纸
@@ -309,7 +319,7 @@ export async function randomWallpaper(): Promise<string> {
   }
 
   try {
-    const result = await invoke<string>('generate_random_wallpaper')
+    const result = await window.electronAPI!.invoke('generate-random-wallpaper')
     return result
   } catch (error) {
     console.error('随机切换壁纸失败:', error)
