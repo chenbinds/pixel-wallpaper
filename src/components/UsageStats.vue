@@ -53,7 +53,7 @@
  */
 import { computed } from 'vue'
 import { useGeneratorStore } from '../stores/generator'
-import { open } from '@tauri-apps/api/shell'
+import { open } from '@tauri-apps/plugin-shell'
 
 const store = useGeneratorStore()
 

@@ -5,7 +5,7 @@
  * 在浏览器开发模式下（非 Tauri 环境），自动返回模拟数据。
  */
 
-import { invoke } from '@tauri-apps/api/tauri'
+import { invoke } from '@tauri-apps/api/core'
 
 // ============================================
 // 类型定义
