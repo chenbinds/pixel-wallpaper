@@ -5,7 +5,7 @@
  * Handles window management, system tray, and IPC for wallpaper operations.
  */
 
-const { app, BrowserWindow, ipcMain, Menu, Tray, dialog, Notification } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, Tray, dialog, Notification, nativeImage } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const fsPromises = require('fs/promises')
@@ -240,7 +240,10 @@ function createWindow() {
   })
 
   // Load the app
-  if (process.env.NODE_ENV === 'development' || process.argv.includes('--dev')) {
+  // In development, always load from Vite dev server
+  // app.isPackaged is false when running from source (not built exe)
+  const isDev = !app.isPackaged
+  if (isDev) {
     mainWindow.loadURL(VITE_DEV_SERVER_URL)
     mainWindow.webContents.openDevTools()
   } else {
@@ -265,12 +268,19 @@ function createTray() {
   // Use a simple icon path (will work even if icon doesn't exist)
   const iconPath = path.join(__dirname, '..', 'public', 'favicon.ico')
 
+  // Create a 16x16 empty icon as fallback
+  const emptyIcon = nativeImage.createEmpty()
+
   try {
-    tray = new Tray(iconPath)
+    if (fs.existsSync(iconPath)) {
+      tray = new Tray(iconPath)
+    } else {
+      console.warn('Tray icon not found, using empty icon')
+      tray = new Tray(emptyIcon)
+    }
   } catch (err) {
     console.warn('Could not create tray icon, using empty icon:', err.message)
-    // Create tray without a custom icon (Electron will use default)
-    tray = new Tray(path.join(__dirname, 'preload.js')) // fallback
+    tray = new Tray(emptyIcon)
   }
 
   const contextMenu = Menu.buildFromTemplate([
