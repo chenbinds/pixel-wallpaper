@@ -316,3 +316,23 @@ export async function randomWallpaper(): Promise<string> {
     throw new Error(`随机切换壁纸失败: ${error}`)
   }
 }
+
+// ============================================
+// 兼容层：统一导出对象形式
+// ============================================
+
+/**
+ * 兼容层：导出 tauriService 对象
+ * 供旧代码使用，调用上述独立函数
+ */
+export const tauriService = {
+  downloadAndSave,
+  saveUploaded,
+  setDesktopWallpaper,
+  getWallpaperDirectory,
+  listWallpapers,
+  deleteWallpaper,
+  getAppDataDir,
+  onWallpaperChanged,
+  randomWallpaper,
+}
