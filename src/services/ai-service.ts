@@ -55,11 +55,11 @@ export const PROVIDERS: Record<AiProvider, ProviderInfo> = {
     name: '通义万相',
     description: '阿里云 DashScope 图片生成服务',
     icon: '🇨🇳',
-    defaultModel: 'wan2.6-t2i',
+    defaultModel: 'wan2.7-image-pro',
     models: [
-      { id: 'wan2.6-t2i', name: '万相 2.6 文生图', description: '最新版，同步接口，质量更高', maxResolution: '1440x1440' },
-      { id: 'wan2.5-t2i-preview', name: '万相 2.5 文生图', description: '预览版，异步调用', maxResolution: '1280x1280' },
-      { id: 'wanx-v1', name: '通义万相 v1', description: '基础图片生成模型（旧版）', maxResolution: '1024x1024' },
+      { id: 'wan2.7-image-pro', name: '万相 2.7 Image Pro', description: '专业版，支持4K高清，质量最佳', maxResolution: '3840x2160' },
+      { id: 'wan2.7-image', name: '万相 2.7 Image', description: '标准版，生成速度更快', maxResolution: '2048x2048' },
+      { id: 'wan2.6-t2i', name: '万相 2.6 文生图', description: '上一代模型，同步接口', maxResolution: '1440x1440' },
     ]
   },
   openai: {
