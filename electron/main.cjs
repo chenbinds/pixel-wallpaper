@@ -266,25 +266,38 @@ function createWindow() {
 // ============================================
 
 function createTray() {
-  // 用代码生成一个 16x16 像素风托盘图标（紫色渐变方块）
-  const size = 16
-  const canvas = `
-    <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0" y="0" width="16" height="16" rx="3" fill="#667eea"/>
-      <rect x="2" y="2" width="4" height="4" fill="#a78bfa" opacity="0.8"/>
-      <rect x="8" y="2" width="4" height="4" fill="#764ba2" opacity="0.8"/>
-      <rect x="2" y="8" width="4" height="4" fill="#764ba2" opacity="0.8"/>
-      <rect x="8" y="8" width="4" height="4" fill="#a78bfa" opacity="0.8"/>
-      <rect x="6" y="6" width="4" height="4" fill="#fff" opacity="0.9"/>
-    </svg>
-  `
-  const trayIcon = nativeImage.createFromBuffer(Buffer.from(canvas))
+  // 使用项目自带的托盘图标
+  const iconPath = path.join(__dirname, '..', 'public', 'tray-icon.png')
+  let trayIcon
+  try {
+    trayIcon = nativeImage.createFromPath(iconPath)
+    if (trayIcon.isEmpty()) {
+      throw new Error('Icon loaded as empty')
+    }
+  } catch (err) {
+    console.warn('Could not load tray icon from file, generating fallback:', err.message)
+    // 后备方案：用代码生成一个 16x16 像素风图标
+    const size = 16
+    const canvas = `
+      <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="16" height="16" rx="3" fill="#667eea"/>
+        <rect x="2" y="2" width="4" height="4" fill="#a78bfa" opacity="0.8"/>
+        <rect x="8" y="2" width="4" height="4" fill="#764ba2" opacity="0.8"/>
+        <rect x="2" y="8" width="4" height="4" fill="#764ba2" opacity="0.8"/>
+        <rect x="8" y="8" width="4" height="4" fill="#a78bfa" opacity="0.8"/>
+        <rect x="6" y="6" width="4" height="4" fill="#fff" opacity="0.9"/>
+      </svg>
+    `
+    // SVG 字符串不能直接用 createFromBuffer，需要转成 data URI 再用 createFromPath
+    // 这里用 createEmpty 作为最终后备
+    trayIcon = nativeImage.createEmpty()
+  }
 
   try {
-    tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
+    tray = new Tray(trayIcon)
   } catch (err) {
-    console.warn('Could not create tray icon:', err.message)
-    tray = new Tray(nativeImage.createEmpty())
+    console.warn('Could not create tray:', err.message)
+    return
   }
 
   const contextMenu = Menu.buildFromTemplate([

@@ -32,34 +32,33 @@
         </button>
       </div>
       
-      <!-- 搜索 + 视图切换 -->
-      <div class="search-and-view">
-        <div class="search-section">
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="search-input"
-            placeholder="搜索壁纸..."
-          />
-          <span class="search-icon">🔍</span>
-        </div>
+      <!-- 搜索 -->
+      <div class="search-section">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="search-input"
+          placeholder="搜索壁纸..."
+        />
+        <span class="search-icon">🔍</span>
+      </div>
 
-        <div class="view-toggle">
-          <button
-            class="view-btn"
-            :class="{ active: viewMode === 'grid' }"
-            @click="viewMode = 'grid'"
-          >
-            ⊞ 网格
-          </button>
-          <button
-            class="view-btn"
-            :class="{ active: viewMode === 'list' }"
-            @click="viewMode = 'list'"
-          >
-            ☰ 列表
-          </button>
-        </div>
+      <!-- 视图切换 -->
+      <div class="view-toggle">
+        <button
+          class="view-btn"
+          :class="{ active: viewMode === 'grid' }"
+          @click="viewMode = 'grid'"
+        >
+          ⊞ 网格
+        </button>
+        <button
+          class="view-btn"
+          :class="{ active: viewMode === 'list' }"
+          @click="viewMode = 'list'"
+        >
+          ☰ 列表
+        </button>
       </div>
     </div>
 
@@ -357,11 +356,14 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 .gallery-container {
   max-width: 1400px;
   margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
   text-align: center;
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
@@ -373,9 +375,10 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   flex-wrap: wrap;
@@ -430,18 +433,10 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.search-and-view {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex: 1;
-  min-width: 280px;
-}
-
 .search-section {
   position: relative;
-  flex: 1;
-  min-width: 0;
+  width: 180px;
+  flex-shrink: 0;
 }
 
 .search-input {
@@ -491,7 +486,11 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 /* 壁纸容器样式 */
 .wallpapers-container {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  align-content: start;
+  min-height: 0;
 }
 
 .wallpapers-container.grid {
@@ -829,9 +828,8 @@ const handleDelete = async (wallpaper: Wallpaper) => {
     font-size: 0.85rem;
   }
 
-  .search-and-view {
-    min-width: 200px;
-    gap: 0.5rem;
+  .search-section {
+    width: 150px;
   }
 
   .search-input {

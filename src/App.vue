@@ -155,7 +155,8 @@ const logoPixels = ref(
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #fff;
 }
@@ -409,8 +410,9 @@ const logoPixels = ref(
    ============================================ */
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 1rem 2rem;
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* ============================================

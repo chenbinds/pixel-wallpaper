@@ -986,11 +986,14 @@ watch(selectedSceneCategory, (newCat) => {
 .generator-container {
   max-width: 1400px;
   margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
   text-align: center;
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
@@ -1001,17 +1004,20 @@ watch(selectedSceneCategory, (newCat) => {
 .generator-layout {
   display: grid;
   grid-template-columns: 420px 1fr;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
 }
 
 /* 控制面板 */
 .control-panel {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  padding: 1.25rem;
+  padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 160px);
   overflow-y: auto;
+  min-height: 0;
 }
 
 .section {
