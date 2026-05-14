@@ -119,21 +119,29 @@ function setDesktopWallpaperWindows(imagePath) {
     // Normalize path for Windows (forward slashes to backslashes)
     const normalizedPath = imagePath.replace(/\//g, '\\')
 
-    // 使用 PowerShell 调用 SystemParametersInfo API 设置壁纸
-    // 这是 Windows 官方推荐的方式，不需要管理员权限
-    const psScript = `
-      Add-Type @"
-      using System;
-      using System.Runtime.InteropServices;
-      public class Wallpaper {
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
-      }
+    // 使用 PowerShell 脚本设置壁纸
+    // 将脚本写入临时文件然后执行，避免命令行转义问题
+    const psScript = `Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+public class Wallpaper {
+  [DllImport("user32.dll", CharSet = CharSet.Auto)]
+  public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+}
 "@
-      [Wallpaper]::SystemParametersInfo(20, 0, "${normalizedPath}", 3)
-    `
+[Wallpaper]::SystemParametersInfo(20, 0, "${normalizedPath}", 3)`
 
-    exec(`powershell.exe -Command "${psScript.replace(/"/g, '\\"')}"`, (error, stdout, stderr) => {
+    const tempScriptPath = path.join(app.getPath('temp'), 'set-wallpaper.ps1')
+    fs.writeFileSync(tempScriptPath, psScript, 'utf8')
+
+    exec(`powershell.exe -ExecutionPolicy Bypass -File "${tempScriptPath}"`, (error, stdout, stderr) => {
+      // 清理临时文件
+      try {
+        fs.unlinkSync(tempScriptPath)
+      } catch (e) {
+        // ignore cleanup errors
+      }
+
       if (error) {
         console.error('Failed to set wallpaper:', error)
         reject(new Error(`Failed to set wallpaper: ${error.message}`))
@@ -448,6 +456,35 @@ function registerIpcHandlers() {
       }
     } catch (err) {
       console.error('set-desktop-wallpaper failed:', err)
+      throw err
+    }
+  })
+
+  /**
+   * Show save dialog and save wallpaper to user-selected location
+   */
+  ipcMain.handle('save-wallpaper-dialog', async (_event, { sourcePath, defaultName }) => {
+    try {
+      if (!mainWindow) {
+        throw new Error('Main window not available')
+      }
+
+      const { filePath } = await dialog.showSaveDialog(mainWindow, {
+        title: '保存壁纸',
+        defaultPath: defaultName || 'wallpaper.png',
+        filters: [
+          { name: '图片文件', extensions: ['png', 'jpg', 'jpeg'] },
+          { name: '所有文件', extensions: ['*'] }
+        ]
+      })
+
+      if (filePath) {
+        await fsPromises.copyFile(sourcePath, filePath)
+        return filePath
+      }
+      return null
+    } catch (err) {
+      console.error('save-wallpaper-dialog failed:', err)
       throw err
     }
   })

@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
       'download-and-save-wallpaper',
       'save-uploaded-wallpaper',
       'set-desktop-wallpaper',
+      'save-wallpaper-dialog',
       'get-wallpaper-directory',
       'get-wallpaper-dir',
       'list-wallpapers',

@@ -327,20 +327,25 @@ const handleSetWallpaper = async (wallpaper: Wallpaper) => {
   }
 }
 
-// 下载壁纸（保存到用户选择的位置）
+// 下载壁纸（让用户选择保存位置）
 const handleDownload = async (wallpaper: Wallpaper) => {
   try {
     const imagePath = wallpaper.localPath || wallpaper.imageUrl
-    
-    // 如果是远程 URL，先下载到本地
+
+    // 如果是远程 URL，先下载到本地临时目录
     let localPath = imagePath
     if (imagePath.startsWith('http')) {
       const filename = `wallpaper_${wallpaper.id}.png`
       localPath = await tauriService.downloadAndSave(imagePath, filename)
     }
-    
-    // 提示已保存
-    alert('壁纸已保存到本地：' + localPath)
+
+    // 显示保存对话框让用户选择位置
+    const defaultName = `wallpaper-${wallpaper.id}.png`
+    const savedPath = await tauriService.saveWallpaperDialog(localPath, defaultName)
+
+    if (savedPath) {
+      alert('壁纸已保存到：' + savedPath)
+    }
   } catch (error) {
     console.error('下载失败:', error)
     alert('下载失败: ' + (error instanceof Error ? error.message : String(error)))
@@ -406,6 +411,7 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 
 .toolbar-bottom {
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .filter-section {

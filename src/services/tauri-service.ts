@@ -167,6 +167,29 @@ export async function setDesktopWallpaper(imagePath: string): Promise<void> {
 }
 
 /**
+ * 显示保存对话框，让用户选择保存位置
+ *
+ * @param sourcePath - 源文件路径
+ * @param defaultName - 默认文件名
+ * @returns 保存后的文件路径，如果用户取消则返回 null
+ */
+export async function saveWallpaperDialog(sourcePath: string, defaultName: string): Promise<string | null> {
+  if (!isElectronEnvironment()) {
+    console.log('[Mock] saveWallpaperDialog:', sourcePath, defaultName)
+    await simulateDelay()
+    return sourcePath
+  }
+
+  try {
+    const result = await window.electronAPI!.invoke('save-wallpaper-dialog', { sourcePath, defaultName })
+    return result
+  } catch (error) {
+    console.error('保存壁纸对话框失败:', error)
+    throw new Error(`保存壁纸对话框失败: ${error}`)
+  }
+}
+
+/**
  * 获取壁纸保存目录
  *
  * @returns 壁纸目录的完整路径

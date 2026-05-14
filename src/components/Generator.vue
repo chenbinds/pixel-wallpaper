@@ -1,7 +1,9 @@
 <template>
   <div class="generator-container">
-    <h1 class="page-title">✨ AI 像素风壁纸生成器</h1>
-    
+    <div class="generator-header">
+      <h1 class="page-title">✨ AI 像素风壁纸生成器</h1>
+    </div>
+
     <div class="generator-layout">
       <!-- 左侧：生成控制面板 -->
       <div class="control-panel">
@@ -991,10 +993,14 @@ watch(selectedSceneCategory, (newCat) => {
   flex-direction: column;
 }
 
+.generator-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
 .page-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  text-align: center;
+  font-size: 1rem;
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1017,6 +1023,7 @@ watch(selectedSceneCategory, (newCat) => {
   border: 1px solid rgba(255, 255, 255, 0.1);
   max-height: calc(100vh - 160px);
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
 }
 
@@ -1056,7 +1063,7 @@ watch(selectedSceneCategory, (newCat) => {
 /* 预设模板 */
 .preset-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 0.5rem;
 }
 
@@ -1175,7 +1182,7 @@ watch(selectedSceneCategory, (newCat) => {
 /* 场景网格 */
 .scene-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
   gap: 0.4rem;
 }
 
@@ -1215,7 +1222,7 @@ watch(selectedSceneCategory, (newCat) => {
 /* 色彩选择 */
 .color-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 0.5rem;
 }
 
