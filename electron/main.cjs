@@ -245,7 +245,8 @@ function createWindow() {
   const isDev = !app.isPackaged
   if (isDev) {
     mainWindow.loadURL(VITE_DEV_SERVER_URL)
-    mainWindow.webContents.openDevTools()
+    // 开发模式下默认不打开调试工具，需要时手动按 F12 打开
+    // mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
   }
@@ -265,22 +266,25 @@ function createWindow() {
 // ============================================
 
 function createTray() {
-  // Use a simple icon path (will work even if icon doesn't exist)
-  const iconPath = path.join(__dirname, '..', 'public', 'favicon.ico')
-
-  // Create a 16x16 empty icon as fallback
-  const emptyIcon = nativeImage.createEmpty()
+  // 用代码生成一个 16x16 像素风托盘图标（紫色渐变方块）
+  const size = 16
+  const canvas = `
+    <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="16" height="16" rx="3" fill="#667eea"/>
+      <rect x="2" y="2" width="4" height="4" fill="#a78bfa" opacity="0.8"/>
+      <rect x="8" y="2" width="4" height="4" fill="#764ba2" opacity="0.8"/>
+      <rect x="2" y="8" width="4" height="4" fill="#764ba2" opacity="0.8"/>
+      <rect x="8" y="8" width="4" height="4" fill="#a78bfa" opacity="0.8"/>
+      <rect x="6" y="6" width="4" height="4" fill="#fff" opacity="0.9"/>
+    </svg>
+  `
+  const trayIcon = nativeImage.createFromBuffer(Buffer.from(canvas))
 
   try {
-    if (fs.existsSync(iconPath)) {
-      tray = new Tray(iconPath)
-    } else {
-      console.warn('Tray icon not found, using empty icon')
-      tray = new Tray(emptyIcon)
-    }
+    tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
   } catch (err) {
-    console.warn('Could not create tray icon, using empty icon:', err.message)
-    tray = new Tray(emptyIcon)
+    console.warn('Could not create tray icon:', err.message)
+    tray = new Tray(nativeImage.createEmpty())
   }
 
   const contextMenu = Menu.buildFromTemplate([
