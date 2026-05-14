@@ -441,6 +441,7 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   position: relative;
   width: 160px;
   flex-shrink: 0;
+  margin-right: 0.75rem;
 }
 
 .search-input {

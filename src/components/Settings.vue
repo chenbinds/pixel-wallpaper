@@ -412,12 +412,15 @@ const clearAllData = () => {
 .settings-container {
   max-width: 800px;
   margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .settings-layout {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding-bottom: 2rem;
 }
 
 /* Section 样式 */
