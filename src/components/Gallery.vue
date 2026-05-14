@@ -2,66 +2,60 @@
   <div class="gallery-container">
     <!-- 工具栏 -->
     <div class="toolbar">
-      <!-- 第一行：筛选按钮 -->
-      <div class="toolbar-row">
-        <div class="filter-section">
-          <button
-            v-for="filter in sourceFilters"
-            :key="filter.value"
-            class="filter-btn source-filter"
-            :class="{ active: currentSourceFilter === filter.value }"
-            @click="currentSourceFilter = filter.value"
-          >
-            <span class="filter-icon">{{ filter.icon }}</span>
-            {{ filter.label }}
-            <span class="filter-count">{{ getSourceCount(filter.value) }}</span>
-          </button>
-        </div>
-
-        <div class="filter-section">
-          <button
-            v-for="filter in timeFilters"
-            :key="filter.value"
-            class="filter-btn"
-            :class="{ active: currentTimeFilter === filter.value }"
-            @click="currentTimeFilter = filter.value"
-          >
-            {{ filter.label }}
-          </button>
-        </div>
+      <!-- 筛选按钮 -->
+      <div class="filter-section">
+        <button
+          v-for="filter in sourceFilters"
+          :key="filter.value"
+          class="filter-btn source-filter"
+          :class="{ active: currentSourceFilter === filter.value }"
+          @click="currentSourceFilter = filter.value"
+        >
+          <span class="filter-icon">{{ filter.icon }}</span>
+          {{ filter.label }}
+          <span class="filter-count">{{ getSourceCount(filter.value) }}</span>
+        </button>
       </div>
 
-      <!-- 第二行：搜索框（占满整行） -->
-      <div class="toolbar-row">
-        <div class="search-section">
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="search-input"
-            placeholder="搜索壁纸..."
-          />
-          <span class="search-icon">🔍</span>
-        </div>
+      <div class="filter-section">
+        <button
+          v-for="filter in timeFilters"
+          :key="filter.value"
+          class="filter-btn"
+          :class="{ active: currentTimeFilter === filter.value }"
+          @click="currentTimeFilter = filter.value"
+        >
+          {{ filter.label }}
+        </button>
       </div>
 
-      <!-- 第三行：视图切换 -->
-      <div class="toolbar-row toolbar-right">
-        <div class="view-toggle">
-          <button
-            class="view-btn"
-            :class="{ active: viewMode === 'grid' }"
-            @click="viewMode = 'grid'"
-          >
-            ⊞ 网格
-          </button>
-          <button
-            class="view-btn"
-            :class="{ active: viewMode === 'list' }"
-            @click="viewMode = 'list'"
-          >
-            ☰ 列表
-          </button>
-        </div>
+      <!-- 搜索框 -->
+      <div class="search-section">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="search-input"
+          placeholder="搜索壁纸..."
+        />
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <!-- 视图切换 -->
+      <div class="view-toggle">
+        <button
+          class="view-btn"
+          :class="{ active: viewMode === 'grid' }"
+          @click="viewMode = 'grid'"
+        >
+          ⊞ 网格
+        </button>
+        <button
+          class="view-btn"
+          :class="{ active: viewMode === 'list' }"
+          @click="viewMode = 'list'"
+        >
+          ☰ 列表
+        </button>
       </div>
     </div>
 
@@ -384,24 +378,14 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 /* 工具栏样式 */
 .toolbar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-}
-
-.toolbar-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
   flex-wrap: wrap;
-}
-
-.toolbar-right {
-  justify-content: flex-end;
 }
 
 .filter-section {
@@ -455,8 +439,8 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 
 .search-section {
   position: relative;
-  flex: 1;
-  min-width: 120px;
+  width: 160px;
+  flex-shrink: 0;
 }
 
 .search-input {

@@ -269,10 +269,7 @@ function createWindow() {
     mainWindow = null
   })
 
-  mainWindow.on('minimize', (event) => {
-    event.preventDefault()
-    mainWindow.hide()
-  })
+  // 最小化时正常最小化到任务栏（保留任务栏图标）
 }
 
 // ============================================

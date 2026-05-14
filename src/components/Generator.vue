@@ -1011,7 +1011,7 @@ watch(selectedSceneCategory, (newCat) => {
   border-radius: 16px;
   padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  max-height: calc(100vh - 160px);
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
@@ -1561,8 +1561,8 @@ watch(selectedSceneCategory, (newCat) => {
   }
 
   .control-panel {
-    max-height: calc(100vh - 180px);
-    padding: 1rem;
+    height: 100%;
+    padding: 0.75rem;
   }
 
   .section {
