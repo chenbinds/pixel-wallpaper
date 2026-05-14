@@ -32,33 +32,34 @@
         </button>
       </div>
       
-      <!-- 搜索 -->
-      <div class="search-section">
-        <input
-          v-model="searchQuery"
-          type="text"
-          class="search-input"
-          placeholder="搜索壁纸..."
-        />
-        <span class="search-icon">🔍</span>
-      </div>
-      
-      <!-- 视图切换 -->
-      <div class="view-toggle">
-        <button
-          class="view-btn"
-          :class="{ active: viewMode === 'grid' }"
-          @click="viewMode = 'grid'"
-        >
-          ⊞ 网格
-        </button>
-        <button
-          class="view-btn"
-          :class="{ active: viewMode === 'list' }"
-          @click="viewMode = 'list'"
-        >
-          ☰ 列表
-        </button>
+      <!-- 搜索 + 视图切换 -->
+      <div class="search-and-view">
+        <div class="search-section">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="search-input"
+            placeholder="搜索壁纸..."
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="view-toggle">
+          <button
+            class="view-btn"
+            :class="{ active: viewMode === 'grid' }"
+            @click="viewMode = 'grid'"
+          >
+            ⊞ 网格
+          </button>
+          <button
+            class="view-btn"
+            :class="{ active: viewMode === 'list' }"
+            @click="viewMode = 'list'"
+          >
+            ☰ 列表
+          </button>
+        </div>
       </div>
     </div>
 
@@ -429,10 +430,18 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   background: rgba(255, 255, 255, 0.3);
 }
 
+.search-and-view {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 280px;
+}
+
 .search-section {
   position: relative;
   flex: 1;
-  min-width: 200px;
+  min-width: 0;
 }
 
 .search-input {
@@ -461,6 +470,7 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 .view-toggle {
   display: flex;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .view-btn {
@@ -801,6 +811,45 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 }
 
 /* 响应式布局 */
+/* ============================================
+   中等屏幕适配（笔记本 125% 缩放）
+   ============================================ */
+@media (max-width: 1100px) {
+  .toolbar {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .filter-section {
+    gap: 0.3rem;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .search-and-view {
+    min-width: 200px;
+    gap: 0.5rem;
+  }
+
+  .search-input {
+    padding: 0.4rem 2rem 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .view-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .wallpapers-container.grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .toolbar {
     flex-direction: column;

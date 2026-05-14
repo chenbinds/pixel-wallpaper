@@ -307,186 +307,6 @@
             {{ isUploading ? '上传中...' : '上传到画廊' }}
           </button>
         </template>
-
-        <!-- 提示词输入 -->
-        <div class="section">
-          <label class="section-title">
-            <span class="icon">💭</span>
-            描述你想要的壁纸
-          </label>
-          <textarea
-            v-model="prompt"
-            class="prompt-input"
-            placeholder="例如：一片宁静的星空下，有一座古老的城堡，周围环绕着萤火虫..."
-            rows="3"
-          />
-          <div class="prompt-hint">
-            提示：描述越详细，生成的效果越好。留空则使用预设配置。
-          </div>
-        </div>
-
-        <!-- 分辨率选择 -->
-        <div class="section">
-          <label class="section-title">
-            <span class="icon">📐</span>
-            分辨率 / 比例
-          </label>
-          <select v-model="resolution" class="select-input">
-            <optgroup label="常用分辨率">
-              <option v-for="res in resolutionOptions.common" :key="res.value" :value="res.value">
-                {{ res.label }}
-              </option>
-            </optgroup>
-            <optgroup label="超宽屏">
-              <option v-for="res in resolutionOptions.ultrawide" :key="res.value" :value="res.value">
-                {{ res.label }}
-              </option>
-            </optgroup>
-            <optgroup label="竖屏">
-              <option v-for="res in resolutionOptions.portrait" :key="res.value" :value="res.value">
-                {{ res.label }}
-              </option>
-            </optgroup>
-          </select>
-        </div>
-
-        <!-- 场景风格 -->
-        <div class="section">
-          <label class="section-title">
-            <span class="icon">🏞️</span>
-            场景风格
-          </label>
-          <div class="category-tabs">
-            <button
-              v-for="cat in sceneCategories"
-              :key="cat.value"
-              class="category-tab"
-              :class="{ active: selectedSceneCategory === cat.value }"
-              @click="selectedSceneCategory = cat.value"
-            >
-              {{ cat.icon }} {{ cat.label }}
-            </button>
-          </div>
-          <div class="scene-grid">
-            <button
-              v-for="scene in filteredScenes"
-              :key="scene.value"
-              class="scene-btn"
-              :class="{ active: sceneStyle === scene.value }"
-              @click="sceneStyle = scene.value"
-            >
-              <span class="scene-icon">{{ scene.icon }}</span>
-              <span class="scene-name">{{ scene.label }}</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 色彩模式 -->
-        <div class="section">
-          <label class="section-title">
-            <span class="icon">🎨</span>
-            色彩模式
-          </label>
-          <div class="color-grid">
-            <button
-              v-for="color in colorOptions"
-              :key="color.value"
-              class="color-btn"
-              :class="{ active: colorTone === color.value }"
-              @click="colorTone = color.value"
-            >
-              <span class="color-preview" :style="{ background: color.preview }"></span>
-              <span class="color-name">{{ color.label }}</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 像素风专属参数（核心特色） -->
-        <div class="section pixel-section">
-          <label class="section-title">
-            <span class="icon">👾</span>
-            像素风参数
-            <span class="badge">核心</span>
-          </label>
-          
-          <!-- 像素密度 -->
-          <div class="pixel-row">
-            <span class="pixel-label">像素密度</span>
-            <div class="pixel-options">
-              <button
-                v-for="opt in pixelDensityOptions"
-                :key="opt.value"
-                class="pixel-btn"
-                :class="{ active: pixelDensity === opt.value }"
-                @click="pixelDensity = opt.value"
-              >
-                {{ opt.label }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 风格参考 -->
-          <div class="pixel-row">
-            <span class="pixel-label">风格参考</span>
-            <div class="pixel-options">
-              <button
-                v-for="opt in pixelStyleOptions"
-                :key="opt.value"
-                class="pixel-btn"
-                :class="{ active: pixelStyle === opt.value }"
-                @click="pixelStyle = opt.value"
-              >
-                {{ opt.label }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 游戏视角 -->
-          <div class="pixel-row">
-            <span class="pixel-label">游戏视角</span>
-            <div class="pixel-options">
-              <button
-                v-for="opt in perspectiveOptions"
-                :key="opt.value"
-                class="pixel-btn"
-                :class="{ active: perspective === opt.value }"
-                @click="perspective = opt.value"
-              >
-                {{ opt.label }}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 构图 -->
-        <div class="section">
-          <label class="section-title">
-            <span class="icon">📷</span>
-            构图方式
-          </label>
-          <div class="composition-grid">
-            <button
-              v-for="comp in compositionOptions"
-              :key="comp.value"
-              class="composition-btn"
-              :class="{ active: composition === comp.value }"
-              @click="composition = comp.value"
-            >
-              {{ comp.label }}
-            </button>
-          </div>
-        </div>
-
-        <!-- 生成按钮 -->
-        <button
-          class="generate-btn"
-          :disabled="isGenerating"
-          @click="handleGenerate"
-        >
-          <span v-if="isGenerating" class="loading-spinner"></span>
-          <span v-else class="btn-icon">🚀</span>
-          {{ isGenerating ? 'AI 创作中...' : '开始生成' }}
-        </button>
       </div>
 
       <!-- 右侧：预览区域 -->
@@ -532,7 +352,7 @@
           <button class="action-btn primary" @click="handleSave">
             <span>💾</span> 保存到画廊
           </button>
-          <button class="action-btn secondary" @click="handleSetWallpaper">
+          <button class="action-btn secondary" @click="handleSetWallpaper()">
             <span>🖥️</span> 设为桌面
           </button>
         </div>
@@ -960,6 +780,12 @@ const handleSave = async () => {
       alert('没有可保存的壁纸')
       return
     }
+
+    // 检查该图片是否已在画廊中（避免重复保存）
+    if (store.isWallpaperInGallery(generatedImage.value)) {
+      alert('该壁纸已在画廊中，无需重复保存')
+      return
+    }
     
     // 如果图片已经在本地，直接添加到 store
     const filename = `pixel_${Date.now()}.png`
@@ -1125,7 +951,7 @@ const handleUpload = async () => {
           fileSize: selectedFile.value!.size
         }
         
-        store.addWallpaper(wallpaper)
+        store.addWallpaper(wallpaper, false)  // 上传图片允许重复添加
         
         // 重置表单
         selectedFile.value = null
@@ -1719,6 +1545,96 @@ watch(selectedSceneCategory, (newCat) => {
 
 .action-btn.secondary:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   中等屏幕适配（笔记本 125% 缩放 / 窗口较窄）
+   Windows 125% 缩放下 1200px 窗口实际可视约 960px
+   ============================================ */
+@media (max-width: 1100px) {
+  .generator-layout {
+    grid-template-columns: 360px 1fr;
+    gap: 1rem;
+  }
+
+  .control-panel {
+    max-height: calc(100vh - 180px);
+    padding: 1rem;
+  }
+
+  .section {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .preset-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .scene-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+  }
+
+  .color-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+  }
+
+  .pixel-row {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .pixel-label {
+    font-size: 0.8rem;
+  }
+
+  .pixel-options {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .pixel-btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .composition-grid {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .composition-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .preview-container {
+    min-height: 350px;
+  }
+
+  .generated-image {
+    max-height: 350px;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
 }
 
 /* 响应式 */

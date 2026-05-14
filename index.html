@@ -5,6 +5,19 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PixelWallpaper AI - AI 壁纸生成器</title>
+    <style>
+      /* Windows 缩放适配：让浏览器使用物理像素而非 CSS 像素缩放 */
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+
+      body {
+        /* 确保 body 宽度不超过视口，防止溢出 */
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

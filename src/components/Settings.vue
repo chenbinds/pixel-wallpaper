@@ -759,6 +759,76 @@ input:checked + .slider:before {
 }
 
 /* Responsive */
+/* ============================================
+   中等屏幕适配（笔记本 125% 缩放）
+   ============================================ */
+@media (max-width: 1100px) {
+  .settings-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .settings-section {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .setting-item {
+    margin-bottom: 1rem;
+  }
+
+  .setting-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .provider-grid {
+    gap: 0.75rem;
+  }
+
+  .provider-card {
+    padding: 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .provider-icon {
+    font-size: 1.2rem;
+  }
+
+  .provider-name {
+    font-size: 0.85rem;
+  }
+
+  .input-field,
+  .select-input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .api-key-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .api-key-row .input-field {
+    width: 100%;
+  }
+
+  .action-row {
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 600px) {
   .provider-grid {
     grid-template-columns: repeat(2, 1fr);

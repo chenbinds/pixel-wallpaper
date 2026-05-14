@@ -84,11 +84,30 @@ export const useGeneratorStore = defineStore('generator', () => {
   
   /**
    * 添加壁纸到列表
+   * @param wallpaper 壁纸对象
+   * @param checkDuplicate 是否检查重复（默认 true），上传图片可传 false 允许重复
+   * @returns true 添加成功，false 因重复跳过
    */
-  const addWallpaper = (wallpaper: Wallpaper) => {
+  const addWallpaper = (wallpaper: Wallpaper, checkDuplicate: boolean = true): boolean => {
+    // 去重检查：根据 imageUrl 判断是否已存在
+    if (checkDuplicate) {
+      const exists = wallpapers.value.some(w => w.imageUrl === wallpaper.imageUrl)
+      if (exists) {
+        console.log('壁纸已存在于画廊中，跳过重复添加')
+        return false
+      }
+    }
     wallpapers.value.unshift(wallpaper)
     usageStats.value.savedCount = wallpapers.value.length
     saveWallpapersToStorage()
+    return true
+  }
+
+  /**
+   * 检查指定 imageUrl 是否已存在于画廊中
+   */
+  const isWallpaperInGallery = (imageUrl: string): boolean => {
+    return wallpapers.value.some(w => w.imageUrl === imageUrl)
   }
   
   /**
@@ -212,6 +231,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     // Actions
     incrementCount,
     addWallpaper,
+    isWallpaperInGallery,
     removeWallpaper,
     toggleFavorite,
     setCurrentWallpaper,
