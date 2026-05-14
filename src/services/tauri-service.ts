@@ -362,6 +362,7 @@ export const tauriService = {
   downloadAndSave,
   saveUploaded,
   setDesktopWallpaper,
+  saveWallpaperDialog,
   getWallpaperDirectory,
   listWallpapers,
   deleteWallpaper,

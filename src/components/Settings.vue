@@ -1,7 +1,5 @@
 <template>
   <div class="settings-container">
-    <h1 class="page-title">⚙️ 设置</h1>
-    
     <div class="settings-layout">
       <!-- AI 服务配置 -->
       <section class="settings-section">
@@ -414,16 +412,6 @@ const clearAllData = () => {
 .settings-container {
   max-width: 800px;
   margin: 0 auto;
-}
-
-.page-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .settings-layout {

@@ -404,8 +404,8 @@ const logoPixels = ref(
    ============================================ */
 .main-content {
   flex: 1;
-  padding: 1rem 2rem;
-  overflow-y: auto;
+  padding: 1rem 1.5rem;
+  overflow: hidden;
   min-height: 0;
 }
 

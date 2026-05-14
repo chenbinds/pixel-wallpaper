@@ -1,7 +1,5 @@
 <template>
   <div class="gallery-container">
-    <h1 class="page-title">🖼️ 我的画廊</h1>
-    
     <!-- 工具栏 -->
     <div class="toolbar">
       <!-- 第一行：筛选按钮 -->
@@ -19,7 +17,7 @@
             <span class="filter-count">{{ getSourceCount(filter.value) }}</span>
           </button>
         </div>
-        
+
         <div class="filter-section">
           <button
             v-for="filter in timeFilters"
@@ -33,8 +31,8 @@
         </div>
       </div>
 
-      <!-- 第二行：搜索 + 视图切换 -->
-      <div class="toolbar-row toolbar-bottom">
+      <!-- 第二行：搜索框（占满整行） -->
+      <div class="toolbar-row">
         <div class="search-section">
           <input
             v-model="searchQuery"
@@ -44,7 +42,10 @@
           />
           <span class="search-icon">🔍</span>
         </div>
+      </div>
 
+      <!-- 第三行：视图切换 -->
+      <div class="toolbar-row toolbar-right">
         <div class="view-toggle">
           <button
             class="view-btn"
@@ -380,16 +381,6 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   flex-direction: column;
 }
 
-.page-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  text-align: center;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* 工具栏样式 */
 .toolbar {
   display: flex;
@@ -409,9 +400,8 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   flex-wrap: wrap;
 }
 
-.toolbar-bottom {
-  justify-content: space-between;
-  gap: 1rem;
+.toolbar-right {
+  justify-content: flex-end;
 }
 
 .filter-section {

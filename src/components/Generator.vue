@@ -1,9 +1,5 @@
 <template>
   <div class="generator-container">
-    <div class="generator-header">
-      <h1 class="page-title">✨ AI 像素风壁纸生成器</h1>
-    </div>
-
     <div class="generator-layout">
       <!-- 左侧：生成控制面板 -->
       <div class="control-panel">
@@ -991,12 +987,6 @@ watch(selectedSceneCategory, (newCat) => {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.generator-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0.5rem;
 }
 
 .page-title {
