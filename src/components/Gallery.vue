@@ -4,61 +4,63 @@
     
     <!-- 工具栏 -->
     <div class="toolbar">
-      <!-- 来源筛选 -->
-      <div class="filter-section">
-        <button
-          v-for="filter in sourceFilters"
-          :key="filter.value"
-          class="filter-btn source-filter"
-          :class="{ active: currentSourceFilter === filter.value }"
-          @click="currentSourceFilter = filter.value"
-        >
-          <span class="filter-icon">{{ filter.icon }}</span>
-          {{ filter.label }}
-          <span class="filter-count">{{ getSourceCount(filter.value) }}</span>
-        </button>
-      </div>
-      
-      <!-- 时间筛选 -->
-      <div class="filter-section">
-        <button
-          v-for="filter in timeFilters"
-          :key="filter.value"
-          class="filter-btn"
-          :class="{ active: currentTimeFilter === filter.value }"
-          @click="currentTimeFilter = filter.value"
-        >
-          {{ filter.label }}
-        </button>
-      </div>
-      
-      <!-- 搜索 -->
-      <div class="search-section">
-        <input
-          v-model="searchQuery"
-          type="text"
-          class="search-input"
-          placeholder="搜索壁纸..."
-        />
-        <span class="search-icon">🔍</span>
+      <!-- 第一行：筛选按钮 -->
+      <div class="toolbar-row">
+        <div class="filter-section">
+          <button
+            v-for="filter in sourceFilters"
+            :key="filter.value"
+            class="filter-btn source-filter"
+            :class="{ active: currentSourceFilter === filter.value }"
+            @click="currentSourceFilter = filter.value"
+          >
+            <span class="filter-icon">{{ filter.icon }}</span>
+            {{ filter.label }}
+            <span class="filter-count">{{ getSourceCount(filter.value) }}</span>
+          </button>
+        </div>
+        
+        <div class="filter-section">
+          <button
+            v-for="filter in timeFilters"
+            :key="filter.value"
+            class="filter-btn"
+            :class="{ active: currentTimeFilter === filter.value }"
+            @click="currentTimeFilter = filter.value"
+          >
+            {{ filter.label }}
+          </button>
+        </div>
       </div>
 
-      <!-- 视图切换 -->
-      <div class="view-toggle">
-        <button
-          class="view-btn"
-          :class="{ active: viewMode === 'grid' }"
-          @click="viewMode = 'grid'"
-        >
-          ⊞ 网格
-        </button>
-        <button
-          class="view-btn"
-          :class="{ active: viewMode === 'list' }"
-          @click="viewMode = 'list'"
-        >
-          ☰ 列表
-        </button>
+      <!-- 第二行：搜索 + 视图切换 -->
+      <div class="toolbar-row toolbar-bottom">
+        <div class="search-section">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="search-input"
+            placeholder="搜索壁纸..."
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="view-toggle">
+          <button
+            class="view-btn"
+            :class="{ active: viewMode === 'grid' }"
+            @click="viewMode = 'grid'"
+          >
+            ⊞ 网格
+          </button>
+          <button
+            class="view-btn"
+            :class="{ active: viewMode === 'list' }"
+            @click="viewMode = 'list'"
+          >
+            ☰ 列表
+          </button>
+        </div>
       </div>
     </div>
 
@@ -311,26 +313,38 @@ const handleSetWallpaper = async (wallpaper: Wallpaper) => {
   try {
     let imagePath = wallpaper.localPath || wallpaper.imageUrl
     
-    // 如果是远程 URL，先下载到本地
-    if (wallpaper.imageUrl.startsWith('http')) {
+    // 如果图片是远程 URL，先下载到本地
+    if (imagePath.startsWith('http')) {
       const filename = `wallpaper_current.png`
-      imagePath = await tauriService.downloadAndSave(wallpaper.imageUrl, filename)
+      imagePath = await tauriService.downloadAndSave(imagePath, filename)
     }
     
     await tauriService.setDesktopWallpaper(imagePath)
     alert('已设置为桌面壁纸！')
   } catch (error) {
     console.error('设置壁纸失败:', error)
-    alert('设置壁纸失败')
+    alert('设置壁纸失败: ' + (error instanceof Error ? error.message : String(error)))
   }
 }
 
-// 下载壁纸
-const handleDownload = (wallpaper: Wallpaper) => {
-  const link = document.createElement('a')
-  link.href = wallpaper.localPath || wallpaper.imageUrl
-  link.download = `wallpaper-${wallpaper.id}.png`
-  link.click()
+// 下载壁纸（保存到用户选择的位置）
+const handleDownload = async (wallpaper: Wallpaper) => {
+  try {
+    const imagePath = wallpaper.localPath || wallpaper.imageUrl
+    
+    // 如果是远程 URL，先下载到本地
+    let localPath = imagePath
+    if (imagePath.startsWith('http')) {
+      const filename = `wallpaper_${wallpaper.id}.png`
+      localPath = await tauriService.downloadAndSave(imagePath, filename)
+    }
+    
+    // 提示已保存
+    alert('壁纸已保存到本地：' + localPath)
+  } catch (error) {
+    console.error('下载失败:', error)
+    alert('下载失败: ' + (error instanceof Error ? error.message : String(error)))
+  }
 }
 
 // 删除壁纸
@@ -374,14 +388,24 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 /* 工具栏样式 */
 .toolbar {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
   padding: 0.75rem;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.toolbar-bottom {
+  justify-content: space-between;
 }
 
 .filter-section {
@@ -435,9 +459,8 @@ const handleDelete = async (wallpaper: Wallpaper) => {
 
 .search-section {
   position: relative;
-  width: 180px;
-  flex-shrink: 0;
-  margin-right: 0.5rem;
+  flex: 1;
+  min-width: 120px;
 }
 
 .search-input {
