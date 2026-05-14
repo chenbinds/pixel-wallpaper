@@ -1,47 +1,16 @@
 <template>
   <div class="usage-stats">
-    <div class="stats-grid">
-      <!-- 本月生成 -->
-      <div class="stat-item">
-        <span class="stat-icon">📊</span>
-        <div class="stat-info">
-          <span class="stat-value">{{ stats.monthlyCount }}</span>
-          <span class="stat-label">本月生成</span>
-        </div>
-      </div>
-      
-      <!-- 今日生成 -->
-      <div class="stat-item">
-        <span class="stat-icon">📅</span>
-        <div class="stat-info">
-          <span class="stat-value">{{ stats.todayCount }}</span>
-          <span class="stat-label">今日生成</span>
-        </div>
-      </div>
-      
-      <!-- 累计消耗 -->
-      <div class="stat-item">
-        <span class="stat-icon">💰</span>
-        <div class="stat-info">
-          <span class="stat-value">¥{{ stats.totalCost.toFixed(2) }}</span>
-          <span class="stat-label">累计消耗</span>
-        </div>
-      </div>
-      
-      <!-- 已保存 -->
-      <div class="stat-item">
-        <span class="stat-icon">🖼️</span>
-        <div class="stat-info">
-          <span class="stat-value">{{ stats.savedCount }}</span>
-          <span class="stat-label">已保存</span>
-        </div>
-      </div>
+    <div class="stats-row">
+      <span class="stat-compact">📊 {{ stats.monthlyCount }}</span>
+      <span class="stat-compact">📅 {{ stats.todayCount }}</span>
+      <span class="stat-compact">💰 ¥{{ stats.totalCost.toFixed(2) }}</span>
+      <span class="stat-compact">🖼️ {{ stats.savedCount }}</span>
     </div>
     
     <!-- 查看额度按钮 -->
     <button class="quota-btn" @click="openQuotaPage">
       <span>🔗</span>
-      查看阿里云额度
+      查看额度
     </button>
   </div>
 </template>
@@ -69,53 +38,34 @@ const openQuotaPage = () => {
 .usage-stats {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
 }
 
-.stats-grid {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.stat-item {
+.stats-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
-.stat-icon {
-  font-size: 1.2rem;
-}
-
-.stat-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+.stat-compact {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
 }
 
 .quota-btn {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
   border: 1px solid rgba(102, 126, 234, 0.5);
   background: rgba(102, 126, 234, 0.1);
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .quota-btn:hover {
@@ -126,13 +76,13 @@ const openQuotaPage = () => {
 @media (max-width: 768px) {
   .usage-stats {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
   
-  .stats-grid {
+  .stats-row {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.5rem;
   }
 }
 </style>

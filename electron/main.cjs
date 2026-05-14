@@ -119,15 +119,21 @@ function setDesktopWallpaperWindows(imagePath) {
     // Normalize path for Windows (forward slashes to backslashes)
     const normalizedPath = imagePath.replace(/\//g, '\\')
 
-    const commands = [
-      `reg add "HKCU\\Control Panel\\Desktop" /v WallpaperStyle /t REG_SZ /d 0 /f`,
-      `reg add "HKCU\\Control Panel\\Desktop" /v TileWallpaper /t REG_SZ /d 0 /f`,
-      `reg add "HKCU\\Control Panel\\Desktop" /v Wallpaper /t REG_SZ /d "${normalizedPath}" /f`,
-      `RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters`,
-    ]
+    // 使用 PowerShell 调用 SystemParametersInfo API 设置壁纸
+    // 这是 Windows 官方推荐的方式，不需要管理员权限
+    const psScript = `
+      Add-Type @"
+      using System;
+      using System.Runtime.InteropServices;
+      public class Wallpaper {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+      }
+"@
+      [Wallpaper]::SystemParametersInfo(20, 0, "${normalizedPath}", 3)
+    `
 
-    const fullCommand = commands.join(' && ')
-    exec(fullCommand, (error, stdout, stderr) => {
+    exec(`powershell.exe -Command "${psScript.replace(/"/g, '\\"')}"`, (error, stdout, stderr) => {
       if (error) {
         console.error('Failed to set wallpaper:', error)
         reject(new Error(`Failed to set wallpaper: ${error.message}`))

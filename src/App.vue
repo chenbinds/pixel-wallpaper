@@ -58,15 +58,9 @@
     <!-- 底部区域 -->
     <footer class="footer">
       <UsageStats />
-      <div class="footer-info">
-        <span>PixelWallpaper AI v1.0</span>
-        <span class="separator">|</span>
-        <span>致敬 FC 时代</span>
-      </div>
-      <div class="copyright">
-        <span class="copyright-pixel">■</span>
-        <span>&copy; {{ currentYear }} PixelWallpaper AI. All rights reserved.</span>
-        <span class="copyright-pixel">■</span>
+      <div class="footer-right">
+        <span class="footer-text">PixelWallpaper AI v1.0 | 致敬 FC 时代</span>
+        <span class="footer-text">&copy; {{ currentYear }} PixelWallpaper AI</span>
       </div>
     </footer>
   </div>
@@ -416,48 +410,27 @@ const logoPixels = ref(
 }
 
 /* ============================================
-   底部区域
+   底部区域 - 单行水平布局
    ============================================ */
 .footer {
-  padding: 1rem 2rem;
+  padding: 0.5rem 1.5rem;
   background: rgba(0, 0, 0, 0.2);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
 }
 
-/* 版本信息 */
-.footer-info {
+.footer-right {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
+  gap: 1rem;
+}
+
+.footer-text {
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
-}
-
-.separator {
-  opacity: 0.3;
-}
-
-/* 版权信息 */
-.copyright {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.copyright-pixel {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: rgba(102, 126, 234, 0.4);
-  image-rendering: pixelated;
 }
 
 /* ============================================
