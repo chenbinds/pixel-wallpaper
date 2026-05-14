@@ -437,6 +437,7 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   position: relative;
   width: 180px;
   flex-shrink: 0;
+  margin-right: 0.5rem;
 }
 
 .search-input {
@@ -583,6 +584,12 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   gap: 0.75rem;
   opacity: 0;
   transition: opacity 0.3s;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.wallpaper-item:hover .wallpaper-overlay {
+  pointer-events: auto;
 }
 
 .wallpaper-item:hover .wallpaper-overlay {
@@ -600,6 +607,8 @@ const handleDelete = async (wallpaper: Wallpaper) => {
   cursor: pointer;
   transition: all 0.3s;
   display: flex;
+  pointer-events: auto;
+  z-index: 11;
   align-items: center;
   justify-content: center;
 }
